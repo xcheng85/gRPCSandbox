@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+package viz3d;
+
+service Session {
+    rpc addSession(AddSessionRequest) returns (AddSessionResponse);
+    rpc getSession(GetSessionRequest) returns (GetSessionResponse);
+}
+
+message AddSessionResponse {
+    string id = 1;
+    string createdTimeStamp = 2;
+}
+
+message GetSessionResponse {
+    string id = 1;
+    string createdTimeStamp = 2;
+    string lastUpdatedTimeStamp = 3;
+    string lastBilledTimeStamp = 4;
+    string correlationId = 5;
+    string owner = 6;
+    string renderAreaId = 7;
+    string httpDataLink = 8;
+}
+
+message AddSessionRequest {
+    string id = 1;
+    string renderArea = 2; 
+    string httpDataLink = 3;
+}
+
+message GetSessionRequest {
+    string id = 1;
+}

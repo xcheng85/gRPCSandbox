@@ -1,0 +1,40 @@
+{
+  "name": "gRPCSandbox",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "startServer": "npx tsc --skipLibCheck && DEBUG=SampleServer node ./dist/server.js",
+    "startClient": "npx tsc --skipLibCheck && DEBUG=SampleClient node ./dist/client.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xcheng85/gRPCSandbox.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/xcheng85/gRPCSandbox/issues"
+  },
+  "homepage": "https://github.com/xcheng85/gRPCSandbox#readme",
+  "dependencies": {
+    "@grpc/grpc-js": "^1.2.1",
+    "@grpc/proto-loader": "^0.5.5",
+    "debug": "^4.3.1",
+    "dotenv": "^8.2.0",
+    "google-protobuf": "^3.14.0"
+  },
+  "devDependencies": {
+    "@types/debug": "^4.1.5",
+    "@types/dotenv": "^8.2.0",
+    "@types/google-protobuf": "^3.7.4",
+    "@types/node": "^14.14.9",
+    "grpc-tools": "^1.10.0",
+    "grpc_tools_node_protoc_ts": "^5.0.1",
+    "ts-node": "^9.0.0",
+    "typescript": "^4.1.2"
+  }
+}
