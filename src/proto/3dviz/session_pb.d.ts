@@ -56,6 +56,9 @@ export class GetSessionResponse extends jspb.Message {
     getHttpdatalink(): string;
     setHttpdatalink(value: string): GetSessionResponse;
 
+    getAppid(): string;
+    setAppid(value: string): GetSessionResponse;
+
 
     serializeBinary(): Uint8Array;
     toObject(includeInstance?: boolean): GetSessionResponse.AsObject;
@@ -77,6 +80,7 @@ export namespace GetSessionResponse {
         owner: string,
         renderareaid: string,
         httpdatalink: string,
+        appid: string,
     }
 }
 
@@ -127,5 +131,30 @@ export class GetSessionRequest extends jspb.Message {
 export namespace GetSessionRequest {
     export type AsObject = {
         id: string,
+    }
+}
+
+export class GetAssignedSessionRequest extends jspb.Message { 
+    getOwner(): string;
+    setOwner(value: string): GetAssignedSessionRequest;
+
+    getAppid(): string;
+    setAppid(value: string): GetAssignedSessionRequest;
+
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): GetAssignedSessionRequest.AsObject;
+    static toObject(includeInstance: boolean, msg: GetAssignedSessionRequest): GetAssignedSessionRequest.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: GetAssignedSessionRequest, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): GetAssignedSessionRequest;
+    static deserializeBinaryFromReader(message: GetAssignedSessionRequest, reader: jspb.BinaryReader): GetAssignedSessionRequest;
+}
+
+export namespace GetAssignedSessionRequest {
+    export type AsObject = {
+        owner: string,
+        appid: string,
     }
 }

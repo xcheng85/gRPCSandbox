@@ -1,8 +1,8 @@
 import debug from "debug";
 import * as grpc from "@grpc/grpc-js";
 
-import { GetSessionResponse, GetSessionRequest } from "./proto/3dviz/session_pb";
-import {SessionClient} from "./proto/3dviz/session_grpc_pb";
+import { GetSessionResponse, GetSessionRequest, GetAssignedSessionRequest } from "./proto/3dviz/session_pb";
+import { SessionClient } from "./proto/3dviz/session_grpc_pb";
 
 const log = debug("SampleClient");
 const port: string | number = process.env.PORT || 50051;
@@ -17,7 +17,7 @@ const getSession = async (id: string) => {
         client.getSession(request, (err, session: GetSessionResponse) => {
             if (err != null) {
                 debug(`[getBook] err:\nerr.message: ${err.message}\nerr.stack:\n${err.stack}`);
-                reject(err); 
+                reject(err);
                 return;
             }
             log(`[getBook] Book: ${JSON.stringify(session.toObject())}`);
@@ -26,8 +26,28 @@ const getSession = async (id: string) => {
     });
 };
 
+const getAssignedSession = (owner: string, appId: string) => {
+    return new Promise((resolve) => {
+        const request = new GetAssignedSessionRequest();
+        request.setAppid(appId);
+        request.setOwner(owner);
+
+        log(`[getAssignedSession] Request: ${JSON.stringify(request.toObject())}`);
+
+        const stream: grpc.ClientReadableStream<GetSessionResponse> = client.getAssignedSessions(request);
+        stream.on("data", (data: GetSessionResponse) => {
+            log(`[getAssignedSession] Session: ${JSON.stringify(data.toObject())}`);
+        });
+        stream.on("end", () => {
+            log("[getAssignedSession] Done.");
+            resolve(null);
+        });
+    });
+};
+
 async function main() {
     await getSession('bogus');
+    await getAssignedSession("xcheng4", "test");
 }
 
 main().then((_) => _);

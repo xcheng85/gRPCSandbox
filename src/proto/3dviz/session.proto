@@ -5,6 +5,8 @@ package viz3d;
 service Session {
     rpc addSession(AddSessionRequest) returns (AddSessionResponse);
     rpc getSession(GetSessionRequest) returns (GetSessionResponse);
+
+    rpc getAssignedSessions(GetAssignedSessionRequest) returns (stream GetSessionResponse) {}
 }
 
 message AddSessionResponse {
@@ -21,6 +23,7 @@ message GetSessionResponse {
     string owner = 6;
     string renderAreaId = 7;
     string httpDataLink = 8;
+    string appId = 9;
 }
 
 message AddSessionRequest {
@@ -31,4 +34,9 @@ message AddSessionRequest {
 
 message GetSessionRequest {
     string id = 1;
+}
+
+message GetAssignedSessionRequest {
+    string owner = 1;
+    string appId = 2;
 }

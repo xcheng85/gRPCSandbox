@@ -26,6 +26,17 @@ function deserialize_viz3d_AddSessionResponse(buffer_arg) {
   return session_pb.AddSessionResponse.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
+function serialize_viz3d_GetAssignedSessionRequest(arg) {
+  if (!(arg instanceof session_pb.GetAssignedSessionRequest)) {
+    throw new Error('Expected argument of type viz3d.GetAssignedSessionRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_viz3d_GetAssignedSessionRequest(buffer_arg) {
+  return session_pb.GetAssignedSessionRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
 function serialize_viz3d_GetSessionRequest(arg) {
   if (!(arg instanceof session_pb.GetSessionRequest)) {
     throw new Error('Expected argument of type viz3d.GetSessionRequest');
@@ -69,6 +80,17 @@ var SessionService = exports.SessionService = {
     responseType: session_pb.GetSessionResponse,
     requestSerialize: serialize_viz3d_GetSessionRequest,
     requestDeserialize: deserialize_viz3d_GetSessionRequest,
+    responseSerialize: serialize_viz3d_GetSessionResponse,
+    responseDeserialize: deserialize_viz3d_GetSessionResponse,
+  },
+  getAssignedSessions: {
+    path: '/viz3d.Session/getAssignedSessions',
+    requestStream: false,
+    responseStream: true,
+    requestType: session_pb.GetAssignedSessionRequest,
+    responseType: session_pb.GetSessionResponse,
+    requestSerialize: serialize_viz3d_GetAssignedSessionRequest,
+    requestDeserialize: deserialize_viz3d_GetAssignedSessionRequest,
     responseSerialize: serialize_viz3d_GetSessionResponse,
     responseDeserialize: deserialize_viz3d_GetSessionResponse,
   },
