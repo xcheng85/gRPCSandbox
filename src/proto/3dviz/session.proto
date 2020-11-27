@@ -2,11 +2,12 @@ syntax = "proto3";
 
 package viz3d;
 
-service Session {
+service SessionService {
     rpc addSession(AddSessionRequest) returns (AddSessionResponse);
-    rpc getSession(GetSessionRequest) returns (GetSessionResponse);
+    rpc getSession(GetSessionRequest) returns (Session);
 
-    rpc getAssignedSessions(GetAssignedSessionRequest) returns (stream GetSessionResponse) {}
+    rpc getAssignedSessions(GetAssignedSessionRequest) returns (stream Session) {};
+    rpc getSessions (stream GetSessionsRequest) returns (stream Session) {}
 }
 
 message AddSessionResponse {
@@ -14,7 +15,7 @@ message AddSessionResponse {
     string createdTimeStamp = 2;
 }
 
-message GetSessionResponse {
+message Session {
     string id = 1;
     string createdTimeStamp = 2;
     string lastUpdatedTimeStamp = 3;
@@ -39,4 +40,8 @@ message GetSessionRequest {
 message GetAssignedSessionRequest {
     string owner = 1;
     string appId = 2;
+}
+
+message GetSessionsRequest {
+    string appId = 1;
 }

@@ -1,12 +1,12 @@
 import debug from "debug";
 import * as grpc from "@grpc/grpc-js";
 
-import { GetSessionResponse, GetSessionRequest, GetAssignedSessionRequest } from "./proto/3dviz/session_pb";
-import { SessionClient } from "./proto/3dviz/session_grpc_pb";
+import { Session, GetSessionRequest, GetAssignedSessionRequest, GetSessionsRequest } from "./proto/3dviz/session_pb";
+import { SessionServiceClient } from "./proto/3dviz/session_grpc_pb";
 
 const log = debug("SampleClient");
 const port: string | number = process.env.PORT || 50051;
-const client = new SessionClient(`127.0.0.1:${port}`, grpc.credentials.createInsecure());
+const client = new SessionServiceClient(`127.0.0.1:${port}`, grpc.credentials.createInsecure());
 
 const getSession = async (id: string) => {
     return new Promise((resolve, reject) => {
@@ -14,7 +14,7 @@ const getSession = async (id: string) => {
         request.setId(id);
         log(`[getSession] Request: ${JSON.stringify(request.toObject())}`);
 
-        client.getSession(request, (err, session: GetSessionResponse) => {
+        client.getSession(request, (err, session: Session) => {
             if (err != null) {
                 debug(`[getBook] err:\nerr.message: ${err.message}\nerr.stack:\n${err.stack}`);
                 reject(err);
@@ -34,8 +34,8 @@ const getAssignedSession = (owner: string, appId: string) => {
 
         log(`[getAssignedSession] Request: ${JSON.stringify(request.toObject())}`);
 
-        const stream: grpc.ClientReadableStream<GetSessionResponse> = client.getAssignedSessions(request);
-        stream.on("data", (data: GetSessionResponse) => {
+        const stream: grpc.ClientReadableStream<Session> = client.getAssignedSessions(request);
+        stream.on("data", (data: Session) => {
             log(`[getAssignedSession] Session: ${JSON.stringify(data.toObject())}`);
         });
         stream.on("end", () => {
@@ -45,9 +45,32 @@ const getAssignedSession = (owner: string, appId: string) => {
     });
 };
 
+const getSessions = () => {
+    return new Promise((resolve) => {
+        const stream: grpc.ClientDuplexStream<GetSessionsRequest, Session> = client.getSessions();
+
+        stream.on("data", (data: Session) => {
+            log(`[getSessions] Session: ${JSON.stringify(data.toObject())}`);
+        });
+        stream.on("end", () => {
+            log("[getSessions] Done.");
+            resolve(null);
+        });
+
+        for (let i = 0; i < 10; i++) {
+            const req = new GetSessionsRequest();
+            req.setAppid(`xcheng4_${i}`);
+            log(`[getSessions] Request: ${JSON.stringify(req.toObject())}`);
+            stream.write(req);
+        }
+        stream.end();
+    });
+};
+
 async function main() {
-    await getSession('bogus');
-    await getAssignedSession("xcheng4", "test");
+  //  await getSession('bogus');
+ //   await getAssignedSession("xcheng4", "test");
+    await getSessions();
 }
 
 main().then((_) => _);
