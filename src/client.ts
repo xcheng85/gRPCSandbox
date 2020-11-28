@@ -48,9 +48,10 @@ const getSession = async (id: string) => {
         request.setId(id);
         log(`[getSession] Request: ${JSON.stringify(request.toObject())}`);
         const metadata = new grpc.Metadata({ waitForReady: true });
+        metadata.add('API_KEY', 'bogus');
         const deadline = new Date();
         deadline.setSeconds(deadline.getSeconds() + 10);
-        client.getSession(request, metadata, {deadline: deadline}, (err, session: Session) => {
+        client.getSession(request, metadata, { deadline: deadline }, (err, session: Session) => {
             if (err != null) {
                 debug(`[getSession] err:\nerr.message: ${err.message}\nerr.stack:\n${err.stack}`);
                 reject(err);
@@ -71,6 +72,9 @@ const getAssignedSession = (owner: string, appId: string) => {
         log(`[getAssignedSession] Request: ${JSON.stringify(request.toObject())}`);
 
         const stream: grpc.ClientReadableStream<Session> = client.getAssignedSessions(request);
+        stream.on('metadata', (metadata: grpc.Metadata) => {
+            log(`[getAssignedSession] MetaData: ${JSON.stringify(metadata.get('API_KEY'))}`);
+        });
         stream.on("data", (data: Session) => {
             log(`[getAssignedSession] Session: ${JSON.stringify(data.toObject())}`);
         });
@@ -79,7 +83,7 @@ const getAssignedSession = (owner: string, appId: string) => {
             resolve(null);
         });
 
-        stream.cancel();
+        // stream.cancel();
     });
 };
 
@@ -106,7 +110,7 @@ const getSessions = () => {
 };
 
 async function main() {
-    // await getSession('bogus');
+   // await getSession('bogus');
     await getAssignedSession("xcheng4", "test");
     //await getSessions();
 }

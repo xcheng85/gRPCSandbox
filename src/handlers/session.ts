@@ -30,7 +30,10 @@ class SessionServiceHandler implements ISessionServiceServer {
 
     getAssignedSessions = (call: grpc.ServerWritableStream<GetAssignedSessionRequest, Session>) => {
         log(`[getAssignedSessions] Request: ${JSON.stringify(call.request.toObject())}, 
+        API_KEY: ${JSON.stringify(call.metadata.get('API_KEY'))},
         Deadline: ${call.getDeadline()}`);
+        const metadata = new grpc.Metadata({ waitForReady: true });
+        call.sendMetadata(metadata)
         /*
         cancelled: boolean;
     readonly metadata: Metadata;
