@@ -52,11 +52,11 @@ const getSession = async (id: string) => {
         deadline.setSeconds(deadline.getSeconds() + 10);
         client.getSession(request, metadata, {deadline: deadline}, (err, session: Session) => {
             if (err != null) {
-                debug(`[getBook] err:\nerr.message: ${err.message}\nerr.stack:\n${err.stack}`);
+                debug(`[getSession] err:\nerr.message: ${err.message}\nerr.stack:\n${err.stack}`);
                 reject(err);
                 return;
             }
-            log(`[getBook] Book: ${JSON.stringify(session.toObject())}`);
+            log(`[getSession] Session: ${JSON.stringify(session.toObject())}`);
             resolve(session);
         });
     });
@@ -78,6 +78,8 @@ const getAssignedSession = (owner: string, appId: string) => {
             log("[getAssignedSession] Done.");
             resolve(null);
         });
+
+        stream.cancel();
     });
 };
 
@@ -104,8 +106,8 @@ const getSessions = () => {
 };
 
 async function main() {
-    await getSession('bogus');
-    //   await getAssignedSession("xcheng4", "test");
+    // await getSession('bogus');
+    await getAssignedSession("xcheng4", "test");
     //await getSessions();
 }
 

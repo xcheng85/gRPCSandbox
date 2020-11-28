@@ -29,8 +29,19 @@ class SessionServiceHandler implements ISessionServiceServer {
     };
 
     getAssignedSessions = (call: grpc.ServerWritableStream<GetAssignedSessionRequest, Session>) => {
-        log(`[getAssignedSessions] Request: ${JSON.stringify(call.request.toObject())}`);
+        log(`[getAssignedSessions] Request: ${JSON.stringify(call.request.toObject())}, 
+        Deadline: ${call.getDeadline()}`);
+        /*
+        cancelled: boolean;
+    readonly metadata: Metadata;
+    getPeer(): string;
+    sendMetadata(responseMetadata: Metadata): void;
+    getDeadline(): Deadline;*/
+
         for (let i = 1; i <= 10; i++) {
+            if(!call.cancelled){
+                return;
+            }
             const reply = new Session();
             reply.setId(`Session${i}`);
             log(`[getAssignedSessions] Write: ${JSON.stringify(reply.toObject())}`);
